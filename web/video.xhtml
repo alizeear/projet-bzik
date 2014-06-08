@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Bzik - Course</title>
+        <link rel="stylesheet" href="./resources/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="./resources/css/video.css" />
+    </h:head>
+    <h:body>
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{authentificationBean.checkAuthentification(false)}"/>
+        </f:metadata>
+        <div id="countDownLayout">
+            <h:form>
+                <h:outputText id="timeLeft" styleClass="timeLeft" value="#{courseBean.getCourseTimeLeft(sessionScope['courseId'], false)}" />
+                <p:poll widgetVar="timeLeftPoll" interval="1" listener="#{courseBean.getCourseTimeLeft(sessionScope['courseId'], false)}" update="timeLeft" autoStart="true" />
+            </h:form>
+        </div>
+
+        <div id="layout">
+
+            <!-- INFOS Ranking -->
+            <span id="valRank">
+                <dl>
+                    <dt>Classement :</dt>
+                </dl>
+            </span>
+
+            <!-- INFOS TEMPS -->
+            <span id="valTemps">
+                <span id="heu" class="dataTemps">00</span>H
+                <span id="min" class="dataTemps">00</span>M
+                <span id="sec" class="dataTemps">00</span>S<br/>
+            </span>
+
+            <!-- INFOS VITESSE -->
+            <span id="valVitesse">
+                <span id="kmh" class="dataVitesse">00</span>
+                <br/>KM/H
+            </span>
+
+            <!-- INFOS DISTANCE -->
+            <span id="valDistance">
+                <span id="lvl_2">
+                    <span id="length">00</span>M / #{courseBean.course.circuit.distance}M
+                </span>
+                <span id="lvl_1">
+                    <ul>
+                        <li class="labelDistance">Start</li>
+                        <li id="progressBar"><progress value="0" min="0" max="#{courseBean.course.circuit.distance}"><span>Texte</span></progress></li>
+                        <li class="labelDistance">Finish</li>
+                    </ul>
+                </span>
+            </span>
+
+            <!-- BLOC RANK -->
+            <svg id="rank">
+                <rect style="fill:#cccccc;stroke-width:2;
+                      stroke:#ffffff;fill-opacity:0.5;" />
+            </svg>
+
+
+
+            <!-- BLOC TEMPS -->
+            <svg id="temps" height="75px" width="300px">
+                <rect width="300" height="75" 
+                      style="fill:#cccccc;stroke-width:1;
+                      stroke:#ffffff;fill-opacity:0.5;"/>
+            </svg>
+
+            <!-- BLOC VITESSE -->
+            <svg id="vitesse" height="150px" width="150px">
+                <path style="fill:#cccccc;fill-opacity: 0.5;
+                      stroke:#ffffff;stroke-width: 1" 
+                      d="M150,0 L0,0   A150,150 0 0,0 150,150  z"></path>
+            </svg>
+
+            <!-- BLOC DISTANCE -->
+            <svg id="distance" height="90px" width="100%">
+                <rect width="100%" height="90px"
+                      style="fill:#cccccc;stroke-width:1;
+                      stroke:#ffffff;fill-opacity:0.5;" />
+            </svg>
+        </div>
+
+        <div id="ranking">
+            <dl>
+            </dl>
+        </div>
+
+        <div id="blackbox"></div>
+        <h:outputText styleClass="courseId" value="#{sessionScope['courseId']}" />
+        <h:outputText styleClass="utilisateurId" value="#{sessionScope['utilisateurId']}" />
+
+        <video muted="true" id="v" data-add="#{courseBean.course.circuit.urlVideo}" data-distance="#{courseBean.course.circuit.distance}"> 
+            <source src="#{courseBean.course.circuit.urlVideo}" type="video/mp4"/>
+        </video> 
+        <canvas id="c"></canvas>
+        <script src="resources/js/jquery.js"></script>
+        <script src="resources/js/video.js"></script>
+    </h:body>
+</html>
+

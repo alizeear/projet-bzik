@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Bzik - Accueil</title>
+        <link rel="stylesheet" href="./resources/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="./resources/css/styleFO.css" />
+    </h:head>
+    <h:body>
+        <ul style="position: absolute; right: 20px; top: 10px; list-style: none;">
+            <li>
+                <h:form>
+                    <h:commandButton action="#{authentificationBean.logOut(false)}" type="" value="Déconnexion" styleClass="btn btn-danger navbar-btn" rendered="#{sessionScope['utilisateurId'] != null}"/>
+                </h:form>                        
+            </li>
+        </ul>
+        <header>
+            <h1>Bzik</h1>
+            <h2>Courses de vélo virtuelles</h2>
+        </header>
+        <section>
+            <h:form>  
+                <p:growl id="messages" />
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{authentificationBean.checkAuthentification(false)}"/>
+                </f:metadata>
+                <p:accordionPanel styleClass="pf-accordion" multiple="true" var="course" value="#{courseBean.getListeCourses(false)}" dynamic="true" activeIndex="-1">  
+                    <p:tab>
+                        <f:facet name="title">
+                            <h:outputText value="#{course.libelle}" />
+                            <h:outputText id="timeLeft" styleClass="timeLeft" value="#{courseBean.getCourseTimeLeft(course.idCourse, true)}" />
+                            <p:poll interval="1" listener="#{courseBean.getCourseTimeLeft(course.idCourse, true)}" update="timeLeft" />
+                            <p:commandLink styleClass="btn btn-primary enterRace" actionListener="#{courseBean.redirectToCourse(course)}" ajax="false">  
+                                <h:outputText value="Entrer" /> 
+                            </p:commandLink>
+                        </f:facet>
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <h:outputLabel style="font-weight:bold">Circuit&#160;:&#160;</h:outputLabel>
+                            <h:outputText value="#{course.circuit.libelle}" />
+
+                            <h:outputLabel style="font-weight:bold">Description&#160;:&#160;</h:outputLabel>
+                            <h:outputText value="#{course.circuit.description}" />
+                        </h:panelGrid>  
+                    </p:tab> 
+                </p:accordionPanel>
+                <p:outputPanel style="text-align: center;" rendered="#{courseBean.getListeCourses(false).size() == 0}">
+                    <div class="alert alert-warning">Aucune course disponible pour le moment</div>
+                </p:outputPanel>
+            </h:form>   
+        </section>
+        <script src="resources/js/jquery.js"></script>
+        <script src="resources/js/main.js"></script>
+    </h:body>
+</html>
+

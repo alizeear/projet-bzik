@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <h:body>
+        <ui:composition template="/indexBO.xhtml">
+            <ui:define name="style">
+                <link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+                <link rel="stylesheet" href="../resources/css/styleBO.css" />
+                <script src="../resources/js/bootstrap.min.js" />
+            </ui:define>
+            <ui:define name="header">
+                <nav class="navbar navbar-inverse" role="navigation">
+                    <ul class="nav navbar-nav">
+                        <li><h:link value="Home" outcome="/indexBO" /></li>
+                        <li class="active"><h:link value="Gestion des courses" outcome="/admin/courses" /></li>
+                        <li><h:link value="Gestion des utilisateurs" outcome="/admin/utilisateurs" /></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <h:form>
+                                <h:commandButton action="#{authentificationBean.logOut(true)}" type="" value="Déconnexion" styleClass="btn btn-default navbar-btn"/>
+                            </h:form>                        
+                        </li>
+                    </ul>
+                </nav>
+
+                <c:if test="#{not empty sessionScope['pseudo']}">
+                    <p:outputLabel value="Salut #{sessionScope['pseudo']} !" />
+                </c:if>
+            </ui:define>			
+            <ui:define name="content">
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{authentificationBean.checkAuthentification(true)}"/>
+                </f:metadata>
+                <p:messages id="messages"/>
+                <p:tabView effect="slide" effectDuration="normal" id="tabView" activeIndex="#{sessionScope['activeTab']}" >  
+                    <p:tab title="Ajouter une nouvelle course" id="tabListUser">
+                        <h:panelGrid columns="2" cellpadding="10">  
+                            <h:form class="form-horizontal" id="formAddCourse" enctype="multipart/form-data">
+                                <h:inputHidden value="#{courseBean.course.idCourse}"/>
+                                <div class="form-group">
+                                    <p:outputLabel for="libelle" value="Nom de la course" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:inputText label="libelle" id="libelle" required="true" styleClass="form-control" value="#{courseBean.course.libelle}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="date" value="Date et heure de la course" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:calendar value="#{courseBean.course.date}" id="date" pattern="d/M/yyyy HH:mm:ss"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel value="Circuit" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:selectOneMenu value="#{courseBean.course.circuit.idCircuit}">                                              
+                                            <f:selectItem itemLabel="Sélection" itemValue="" />  
+                                            <f:selectItems value="#{circuitBean.listeCircuits}" var="item" itemLabel="#{item.libelle}" itemValue="#{item.idCircuit}"/>  
+                                        </p:selectOneMenu>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <p:commandButton value="Ajouter" action="#{courseBean.updateCourse}" ajax="false" update=":messages" styleClass="btn btn-default"/>
+                                    </div>
+                                </div>
+                            </h:form> 
+                        </h:panelGrid>  
+                    </p:tab>
+                    <p:tab title="Ajouter un circuit">  
+                        <h:panelGrid columns="2" cellpadding="10">  
+                            <h:form class="form-horizontal" id="formAddCircuit" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <p:outputLabel for="libelle" value="Nom du cricuit" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:inputText label="libelle" id="libelle" required="true" styleClass="form-control" value="#{circuitBean.circuit.libelle}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="urlVideo" value="Vidéo" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:fileUpload fileUploadListener="#{circuitBean.upload}" id="urlVideo" mode="advanced" allowTypes="/(\.|\/)(mp4)$/" update="messagesvideo, videoUtilisateurinput"/>
+                                        <p:inputText type="hidden" value="#{circuitBean.circuit.urlVideo}" id="videoUtilisateurinput"/>
+                                        <p:growl id="messagesvideo" showDetail="false"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="temps" value="Temps de la vidéo" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:calendar value="#{circuitBean.circuit.temps}" id="temps" pattern="HH:mm:ss" timeOnly="true" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="vitesse" value="Vitesse du scooter" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">  
+                                        <p:spinner label="vitesse" id="vitesse" required="true" value="#{circuitBean.circuit.vitesse}" suffix="Km/h" min="0" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="distance" value="Longueur du parcours" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:spinner label="distance" id="distance" required="true" value="#{circuitBean.circuit.distance}" suffix="m" min="0" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="description" value="Description" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:inputTextarea rows="10" cols="50" label="description" id="description" required="true" styleClass="form-control" value="#{circuitBean.circuit.description}" queryDelay="750" minQueryLength="4" /> 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="difficulte" value="Difficulté" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:selectOneMenu label="difficulte" id="difficulte" required="true" value="#{circuitBean.circuit.difficulte}">  
+                                            <f:selectItem itemLabel="Select" itemValue="" />  
+                                            <f:selectItem itemLabel="Easy" itemValue="1" />  
+                                            <f:selectItem itemLabel="Normal" itemValue="2" />  
+                                            <f:selectItem itemLabel="Hard" itemValue="3" />  
+                                        </p:selectOneMenu> 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <p:commandButton value="Ajouter" action="#{circuitBean.updateCircuit}" ajax="false" update=":messages" styleClass="btn btn-default"/>
+                                    </div>
+                                </div>
+                            </h:form> 
+                        </h:panelGrid> 
+                    </p:tab>  
+                    <p:tab title="Gérer les courses">  
+                        <h:panelGrid columns="2" cellpadding="10"> 
+                            <p:dialog id="modalDialog1" header="Modifier une course" widgetVar="dlg4" modal="true" height="500" width="500">  
+                                <h:panelGrid columns="2" cellpadding="10">  
+                                    <h:form class="form-horizontal" id="formUpCourse" enctype="multipart/form-data">
+                                        <h:inputHidden value="#{courseBean.course.idCourse}"/>
+                                        <div class="form-group">
+                                            <p:outputLabel for="libelle" value="Nom de la course" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:inputText label="libelle" id="libelle" required="true" styleClass="form-control" value="#{courseBean.course.libelle}"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:outputLabel for="date" value="Date et heure de la course" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:calendar value="#{courseBean.course.date}" id="date" pattern="d/M/yyyy HH:mm:ss"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:outputLabel value="Circuit" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:selectOneMenu value="#{courseBean.course.circuit.idCircuit}">                                              
+                                                    <f:selectItem itemLabel="Sélection" itemValue="" />  
+                                                    <f:selectItems value="#{circuitBean.listeCircuits}" var="item" itemLabel="#{item.libelle}" itemValue="#{item.idCircuit}"/>  
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <p:commandButton value="Modifier" action="#{courseBean.updateCourse}" ajax="false" update=":messages" styleClass="btn btn-default"/>
+                                            </div>
+                                        </div>
+                                    </h:form> 
+                                </h:panelGrid>  
+                            </p:dialog>
+                            <h:form id="formTabCourse" enctype="multipart/form-data">
+                                <p:dataTable value="#{courseBean.getListeCourses(true)}" var="c" paginator="true" resizableColumns="true" id="datatabCourse">
+                                    <p:column sortBy="#{c.libelle}" filterBy="#{c.libelle}">
+                                        <f:facet name="header">Nom de la course</f:facet>
+                                            #{c.libelle}
+                                    </p:column>
+                                    <p:column sortBy="#{c.date}">
+                                        <f:facet name="header">Lancement</f:facet>
+                                        <h:outputText value="#{c.date}">  
+                                            <f:convertDateTime pattern="d/M/yyyy HH:mm:ss" />  
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column sortBy="#{c.circuit.libelle}" filterBy="#{c.circuit.libelle}">
+                                        <f:facet name="header">Circuit</f:facet>
+                                            #{c.circuit.libelle}
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">Actions</f:facet>
+                                        <p:commandButton value ="Modifier" action="#{courseBean.updateCourse(c)}" onclick="PF('dlg4').show();" update=":tabView:formUpCourse"/>
+                                        <br />
+                                        <p:commandButton value ="Supprimer" action="#{courseBean.deleteCourse(c)}" update=":messages, :tabView:formTabCourse"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+                        </h:panelGrid>
+                    </p:tab> 
+                    <p:tab title="Gérer les circuits">  
+                        <h:panelGrid columns="2" cellpadding="10"> 
+                            <p:dialog id="modalDialog" header="Modifier un circuit" widgetVar="dlg3" modal="true" height="500" width="500">  
+                                <h:panelGrid columns="2" cellpadding="10">  
+                                    <h:form class="form-horizontal" id="formUpCircuit" enctype="multipart/form-data">
+                                        <h:inputHidden value="#{circuitBean.circuit.idCircuit}"/>
+                                        <div class="form-group">
+                                            <p:outputLabel for="libelle" value="Nom du cricuit" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:inputText label="libelle" id="libelle" required="true" styleClass="form-control" value="#{circuitBean.circuit.libelle}"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:outputLabel for="urlVideo" value="Vidéo" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:fileUpload fileUploadListener="#{circuitBean.upload}" id="urlVideo" mode="advanced" allowTypes="/(\.|\/)(mp4)$/" update="messagesvideo, videoUtilisateurinput"/>
+                                                <p:inputText type="hidden" value="#{circuitBean.circuit.urlVideo}" id="videoUtilisateurinput"/>
+                                                <p:growl id="messagesvideo" showDetail="false"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:outputLabel for="temps" value="Temps de la vidéo" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:calendar value="#{circuitBean.circuit.temps}" id="temps" pattern="HH:mm:ss" timeOnly="true" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:outputLabel for="vitesse" value="Vitesse du scooter" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">  
+                                                <p:spinner label="vitesse" id="vitesse" required="true" value="#{circuitBean.circuit.vitesse}" suffix="Km/h" min="0" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:outputLabel for="distance" value="Longueur du parcours" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:spinner label="distance" id="distance" required="true" value="#{circuitBean.circuit.distance}" suffix="m" min="0" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:outputLabel for="description" value="Description" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:inputTextarea rows="10" cols="50" label="description" id="description" required="true" styleClass="form-control" value="#{circuitBean.circuit.description}" queryDelay="750" minQueryLength="4" /> 
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <p:outputLabel for="difficulte" value="Difficulté" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:selectOneMenu label="difficulte" id="difficulte" required="true" value="#{circuitBean.circuit.difficulte}">  
+                                                    <f:selectItem itemLabel="Select" itemValue="" />  
+                                                    <f:selectItem itemLabel="Easy" itemValue="1" />  
+                                                    <f:selectItem itemLabel="Normal" itemValue="2" />  
+                                                    <f:selectItem itemLabel="Hard" itemValue="3" />  
+                                                </p:selectOneMenu> 
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <p:commandButton value="Modifier" action="#{circuitBean.updateCircuit}" ajax="false" update=":messages" styleClass="btn btn-default"/>
+                                            </div>
+                                        </div>
+                                    </h:form> 
+                                </h:panelGrid>  
+                            </p:dialog>
+                            <h:form id="formTabCircuit" enctype="multipart/form-data">
+                                <p:dataTable value="#{circuitBean.listeCircuits}" var="c" paginator="true" resizableColumns="true" id="datatabCircuit">
+
+                                    <p:column sortBy="#{c.libelle}" filterBy="#{c.libelle}">
+                                        <f:facet name="header">Nom du circuit</f:facet>
+                                            #{c.libelle}
+                                    </p:column>
+                                    <p:column sortBy="#{c.description}">
+                                        <f:facet name="header">Description</f:facet>
+                                            #{c.description}
+                                    </p:column>
+                                    <p:column sortBy="#{c.difficulte}" width="150">
+                                        <f:facet name="header">Niveau</f:facet>
+                                        <p:rating value="#{c.difficulte}" readonly="true" stars="3"/>
+                                    </p:column>
+                                    <p:column sortBy="#{c.note}" width="150">
+                                        <f:facet name="header">Note</f:facet>
+                                        <p:rating value="#{c.note}" readonly="true" /> 
+                                    </p:column>
+                                    <p:column sortBy="#{c.distance}">
+                                        <f:facet name="header">Distance à parcourir</f:facet>
+                                        #{c.distance}m
+                                    </p:column>
+                                    <p:column sortBy="#{c.urlVideo}">
+                                        <f:facet name="header">Vidéo</f:facet>
+                                        <video controls="true" width="250" src="http://172.31.250.233:8080/bzik-all/resources/videos/#{c.urlVideo}">Ici la description alternative</video>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">Actions</f:facet>
+                                        <p:commandButton value ="Modifier" action="#{circuitBean.updateCircuit(c)}" onclick="PF('dlg3').show();" update=":tabView:formUpCircuit"/>
+                                        <br />
+                                        <p:commandButton value ="Supprimer" action="#{circuitBean.deleteCircuit(c)}" update=":messages, :tabView:formTabCircuit"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+                        </h:panelGrid> 
+                    </p:tab> 
+                </p:tabView>
+
+            </ui:define> 
+            <ui:define name="footer">
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

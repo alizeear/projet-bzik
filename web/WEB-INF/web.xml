@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" 
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <session-config>
+        <session-timeout>-1</session-timeout>
+    </session-config>
+    
+    <display-name>Bzik-all</display-name>
+    
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <param-value>Development</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>bootstrap</param-value>
+    </context-param>
+    
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>*.jsf</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>javax.ws.rs.core.Application</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+    
+    <context-param>
+        <param-name>imgAvatarsEmplacement</param-name>
+        <param-value>G:\LP_METINET\PTUT\bzik-all\web\avatars\</param-value>
+    </context-param>
+    
+    <context-param>
+        <param-name>imgVideoEmplacement</param-name>
+        <param-value>G:\LP_METINET\PTUT\bzik-all\web\resources\videos\</param-value>
+    </context-param>
+    
+    <welcome-file-list>
+        <welcome-file>indexFO.jsf</welcome-file>
+    </welcome-file-list>
+    <!--    <context-param>
+        <param-name>javax.faces.CONFIG_FILES</param-name>
+        <param-value>/WEB-INF/faces-config-mobile.xml,
+            /WEB-INF/faces-config-mobile.xml,
+            /WEB-INF/newfaces-config1.xml</param-value>
+    </context-param>-->
+    
+    <filter>
+        <filter-name>CORSFilter</filter-name>
+        <filter-class>com.bzik.rest.CORSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CORSFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+    
+    <filter>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PrimeFaces FileUpload Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
+    
+        <mime-mapping>  
+            <extension>eot</extension>  
+            <mime-type>application/vnd.ms-fontobject</mime-type>  
+        </mime-mapping>  
+          
+        <mime-mapping>  
+            <extension>otf</extension>  
+            <mime-type>font/opentype</mime-type>  
+        </mime-mapping>  
+          
+        <mime-mapping>  
+            <extension>ttf</extension>  
+            <mime-type>application/x-font-ttf</mime-type>  
+        </mime-mapping>  
+          
+        <mime-mapping>  
+            <extension>woff</extension>  
+            <mime-type>application/x-font-woff</mime-type>  
+        </mime-mapping>  
+          
+        <mime-mapping>  
+            <extension>svg</extension>  
+            <mime-type>image/svg+xml</mime-type>  
+        </mime-mapping>  
+</web-app>

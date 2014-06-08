@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:body> 
+        <ui:composition template="/indexBO.xhtml">
+            <ui:define name="style">
+                <link rel="stylesheet" href="../resources/css/bootstrap.min.css" />
+                <link rel="stylesheet" href="../resources/css/styleBO.css" />
+                <script src="../resources/js/bootstrap.min.js" />
+            </ui:define>
+            <ui:define name="header">
+                <nav class="navbar navbar-inverse" role="navigation">
+                    <ul class="nav navbar-nav">
+                        <li><h:link value="Home" outcome="/indexBO" /></li>
+                        <li><h:link value="Gestion des courses" outcome="/admin/courses" /></li>
+                        <li class="active"><h:link value="Gestion des utilisateurs" outcome="/admin/utilisateurs" /></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <h:form>
+                                <h:commandButton action="#{authentificationBean.logOut(true)}" type="" value="Déconnexion" styleClass="btn btn-default navbar-btn"/>
+                            </h:form>                        
+                        </li>
+                    </ul>
+                </nav>
+            </ui:define>			
+            <ui:define name="content">
+                <f:metadata>
+                    <f:event type="preRenderView" listener="#{authentificationBean.checkAuthentification(true)}"/>
+                </f:metadata>
+                <p:messages id="messages"/>
+
+                <p:tabView effect="slide" effectDuration="normal" id="tabView">
+                    <p:tab title="Gestion des utilisateurs" id="tabListUser">  
+                        <h:panelGrid columns="2" cellpadding="10"> 
+                            <p:dialog id="modalDialog" header="Modifier un utilisateur" widgetVar="dlg2" modal="true" height="500" width="500">  
+                                <h:panelGrid columns="2" cellpadding="10">  
+                                    <h:form class="form-horizontal" id="formUpdateUtilisateur" enctype="multipart/form-data">
+                                        <h:inputHidden value="#{utilisateurBean.utilisateur.idPersonne}"/>
+                                        <h:inputHidden value="#{utilisateurBean.utilisateur.mdp}"/>
+                                        <div class="form-group">
+                                            <p:outputLabel for="pseudo" value="Pseudo" styleClass="col-md-5 control-label"/>
+                                            <div class="col-md-7">
+                                                <p:inputText label="pseudo" id="pseudo" required="true" styleClass="form-control" value="#{utilisateurBean.utilisateur.pseudo}"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <p:fileUpload fileUploadListener="#{utilisateurBean.upload}" mode="advanced" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="avatarUtilisateurinput, avatarUtilisateur"/>
+                                                <p:inputText type="hidden" value="#{utilisateurBean.utilisateur.avatar}" id="avatarUtilisateurinput"/>
+                                                <h:graphicImage value="#{utilisateurBean.utilisateur.avatar}" id="avatarUtilisateur" url="http://172.31.250.233:8080/bzik-all/resources/avatars/#{utilisateurBean.utilisateur.avatar}" class="apercuAvatar"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <p:commandButton value="Modifier" action="#{utilisateurBean.updateUtilisateur()}" ajax="false" update=":messages" styleClass="btn btn-default"/>
+                                            </div>
+                                        </div>
+                                    </h:form> 
+                                </h:panelGrid>  
+                            </p:dialog>
+                            <h:form id="formTabUsers" enctype="multipart/form-data">
+                                <p:dataTable value="#{utilisateurBean.listeUtilisateurs}" var="p" paginator="true" resizableColumns="true" id="datatabPersonne">
+
+                                    <p:column sortBy="#{p.pseudo}" filterBy="#{p.pseudo}">
+                                        <f:facet name="header">Pseudo</f:facet>
+                                            #{p.pseudo}
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">Avatar</f:facet>
+                                        <h:graphicImage value="/avatars/#{p.avatar}" class="avatarTab"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">Actions</f:facet>
+                                        <p:commandButton value ="Supprimer" action="#{utilisateurBean.deleteUtilisateur(p)}" update=":messages, :tabView:formTabUsers"/>
+                                        <p:commandButton value ="Modifier" action="#{utilisateurBean.updateUtilisateur(p)}" onclick="PF('dlg2').show();" update=":tabView:formUpdateUtilisateur"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+                        </h:panelGrid>  
+                    </p:tab>
+                    <p:tab title="Ajouter un utilisateur">  
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <h:form class="form-horizontal" id="formUtilisateur" enctype="multipart/form-data">
+                                <h:inputHidden value="#{utilisateurBean.utilisateur.idPersonne}"/>
+                                <div class="form-group">
+                                    <p:outputLabel for="pseudo" value="Pseudo" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:inputText label="pseudo" id="pseudo" required="true" styleClass="form-control" value="#{utilisateurBean.utilisateur.pseudo}"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="mdp1" value="Mot de passe" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:password label="mdp" id="mdp1" match="mdp2" required="true" styleClass="form-control" value="#{utilisateurBean.utilisateur.mdp}" feedback="true"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:outputLabel for="mdp2" value="Vérification mot de passe" styleClass="col-md-5 control-label"/>
+                                    <div class="col-md-7">
+                                        <p:password label="mdp" id="mdp2" required="true" styleClass="form-control" value="#{utilisateurBean.utilisateur.mdp}" feedback="true"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <p:fileUpload fileUploadListener="#{utilisateurBean.upload}" mode="advanced" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="avatarUtilisateurinput avatarUtilisateur"/>
+                                    <p:inputText type="hidden" value="#{utilisateurBean.utilisateur.avatar}" id="avatarUtilisateurinput"/>
+                                    <h:graphicImage id="avatarUtilisateur" value="/avatars/#{utilisateurBean.utilisateur.avatar}" class="apercuAvatar"/>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-10">
+                                        <p:commandButton value="Ajouter" action="#{utilisateurBean.updateUtilisateur()}" ajax="false" update=":messages" styleClass="btn btn-default"/>
+                                    </div>
+                                </div>
+                            </h:form> 
+                        </h:panelGrid>  
+                    </p:tab>  
+
+                </p:tabView>  
+
+            </ui:define> 
+            <ui:define name="footer">
+
+            </ui:define>			
+        </ui:composition>
+    </h:body> 
+</html>	

@@ -1,0 +1,292 @@
+/* 
+    Created on : 17 avr. 2014, 10:55:55
+    Author     : lp
+*/
+
+/**
+*FONT FACE
+*/
+
+@font-face{ 
+    font-family: 'lato-reg';
+    src: url(../fonts/lato-reg-webfont.eot);
+    src: url(../fonts/lato-reg-webfont.eot?#iefix) format('embedded-opentype'),
+        url(../fonts/lato-reg-webfont.woff) format('woff'),
+        url(../fonts/lato-reg-webfont.ttf) format('truetype'),
+        url(../fonts/lato-reg-webfont.svg#webfont) format('svg');
+}
+@font-face{
+    font-family: 'lato-bol';
+    src: url(../fonts/lato-bol-webfont.eot);
+    src: url(../fonts/lato-bol-webfont.eot?#iefix) format('embedded-opentype'),
+        url(../fonts/lato-bol-webfont.woff) format('woff'),
+        url(../fonts/lato-bol-webfont.ttf) format('truetype'),
+        url(../fonts/lato-bol-webfont.svg#webfont) format('svg');
+}
+@font-face{ 
+    font-family: 'lato-lig';
+    src: url("#{resource['font:css/lato-lig-webfont.eot']}");
+    src: url("#{resource['font:css/lato-lig-webfont.eot']}?#iefix") format('embedded-opentype'),
+        url("#{resource['font:css/lato-lig-webfont.woff']}") format('woff'),
+        url("#{resource['font:css/lato-lig-webfont.ttf']}") format('truetype'),
+        url("#{resource['font:css/lato-lig-webfont.svg']}#WebSymbolsRegular") format('svg');
+}
+
+body {
+    background: black;
+    overflow: hidden;
+}
+
+#c {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#v { 
+    position: absolute; 
+    right: 0; 
+    bottom: 0;
+    min-width: 100%; 
+    min-height: 100%;
+    width: 100%; 
+    height: 100%; 
+    z-index: 1;
+}
+
+
+p {
+    position: relative;
+    z-index: 1;
+}
+
+#countDownLayout {
+    position: absolute;
+    z-index: 140;
+    color: gainsboro;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 0px 0px 10px #DDD;
+    font-size: 50pt;
+    background: rgba(0,0,0,0.5);
+}
+
+.timeLeft{
+    font-family: "lato-lig", arial;
+}
+
+.courseId {
+    display: none;
+}
+
+/**
+*STYLE DU LAYOUT
+*/
+#layout{
+    position:absolute;
+    z-index:250;
+    width:100%;
+    height:100%;
+    margin:0;
+    padding:0;
+    top:0;
+    left:0;
+}
+
+/**
+*STYLE DES BOX
+*/
+#vitesse{
+    min-width:150px;
+    min-height:150px;
+    position:absolute;
+    z-index:255;
+    right:-1px;
+    top:-1px;
+}
+
+#temps{
+    min-width:200px;
+    min-height:75px;
+    position:absolute;
+    z-index:255;
+    left:-1px;
+    top:-1px;
+}
+
+#distance{
+    min-width:102%;
+    min-height:90px;
+    position:absolute;
+    z-index:255;
+    left:-1px;
+    bottom:-1px;
+}
+
+#runner{
+    display: none;
+    position:absolute;
+    z-index:255;
+}
+
+#rank{
+    position:absolute;
+    z-index:255;
+    top:95px;
+    left:0px;
+}
+
+/**
+*STYLE DES VALUES
+*/
+
+#valRank{
+    position:absolute;
+    z-index:260;
+    top:100px;
+    left:0px;
+    padding-left:10px;
+    color:white;
+}
+
+#valTemps{
+    width:300px;
+    margin-top:5px;
+    text-align:center;
+    position:absolute;
+    z-index:260;
+    top:0;
+    left:0;
+    font-size:30px;
+    color:white;
+    font-weight:bold;
+}
+#valTemps .dataTemps{
+    font-size:50px;
+    font-weight:lighter;
+}
+
+#valTemp #position{
+    font-size:15px;
+}
+
+#valVitesse{
+    position:absolute;
+    z-index:260;
+    top:10px;
+    right:10px;
+    font-size:20px;
+    color:white;
+    line-height:20px;
+    text-align:right;
+}
+
+#valVitesse .dataVitesse{
+    font-size:80px;
+    margin-top:10px;
+    line-height:0.8;
+}
+
+#valDistance{
+    position:absolute;
+    z-index:260;
+    bottom:2px;
+    left:0;
+    width:100%;
+    text-align:center;
+    color:white;
+}
+
+#valDistance ul{
+    list-style-type:none;
+    margin:0 0 5px 0;
+    padding:0;
+}
+
+#valDistance li{
+    display:inline-block;
+    font-weight:bold;
+}
+
+#valDistance progress{
+    width:250px;
+}
+
+#valDistance #lvl_2{
+    height:45px;
+    width:100%;
+    line-height:45px;
+    display:inline-block;
+    font-size:25px;
+}
+
+#valDistance #lvl_2 #length,#valDistance #lvl_2 #percentLength{
+    font-size:35px;
+}
+
+/**
+*AFFICHAGE DES COUREURS ADVERSE
+*/
+
+#runnerList{
+    display:none;
+    position:absolute;
+    z-index:265;
+    height:90px;
+    top:10px;
+    text-align:left;
+}
+
+#runnerList p:first-child{
+    color:red;
+}
+#runnerList p:last-child{
+    color:green;
+}
+
+/**
+*STYLE DE RANKING (div)
+*/
+#ranking{
+    display:none;
+    position:absolute;
+    z-index:265;
+    width:100%;
+    height:100%;
+    margin:0 auto;
+    padding:0;
+    align-items: center;
+    justify-content: center;
+}
+#ranking dl{
+    background-color: white;
+    padding:25px;
+}
+#ranking dd{
+    padding-left:15px;
+}
+
+
+/**
+*STYLE RANK (right pane)
+*/
+#valRank{
+    font-size:12px;
+}
+
+#blackbox{
+    display:none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color:black;
+    opacity:0.25;
+    z-index: 260;
+}

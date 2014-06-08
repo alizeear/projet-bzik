@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Bzik - Connexion</title>
+        <link rel="stylesheet" href="./resources/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="./resources/css/styleFO.css" />
+    </h:head>
+    <h:body>
+        <header>
+            <h1>Bzik</h1>
+            <h2>Courses de vélo virtuelles</h2>
+        </header>
+        <section>
+            <p:growl id="messages" />
+            <p:tabView effect="slide" effectDuration="normal" id="tabViewFO">  
+                <p:tab title="Se connecter" id="tabListUser">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:form class="form-horizontal" id="formConnexionFO" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <p:outputLabel for="pseudo" value="Pseudo" styleClass="col-md-5 control-label"/>
+                                <div class="col-md-7">
+                                    <p:inputText label="pseudo" id="pseudo" required="true" value="#{utilisateurBean.utilisateur.pseudo}" styleClass="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="mdp" value="Mot de passe" styleClass="col-md-5 control-label"/>
+                                <div class="col-md-7">
+                                    <p:password label="mdp" id="mdp" required="true" styleClass="form-control" value="#{utilisateurBean.utilisateur.mdp}"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <h:commandButton value="Connexion" action="#{authentificationBean.checkAuthentification(false)}" styleClass="btn btn-primary">
+                                        <f:param name="pseudo" value="#{utilisateurBean.utilisateur.pseudo}" />
+                                        <f:param name="mdp" value="#{utilisateurBean.utilisateur.mdp}" />
+                                    </h:commandButton>
+                                </div>
+                            </div>
+                        </h:form>
+                    </h:panelGrid>  
+                </p:tab>
+                <p:tab title="S'inscrire">  
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:form class="form-horizontal" id="formUtilisateur" enctype="multipart/form-data">
+                            <h:inputHidden value="#{utilisateurBean.utilisateur.idPersonne}"/>
+                            <div class="form-group">
+                                <p:outputLabel for="pseudo" value="Pseudo" styleClass="col-md-5 control-label"/>
+                                <div class="col-md-7">
+                                    <p:inputText label="pseudo" id="pseudo" required="true" styleClass="form-control" value="#{utilisateurBean.utilisateur.pseudo}"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="mdp1" value="Mot de passe" styleClass="col-md-5 control-label"/>
+                                <div class="col-md-7">
+                                    <p:password label="mdp" id="mdp1" match="mdp2" required="true" styleClass="form-control" value="#{utilisateurBean.utilisateur.mdp}" feedback="true"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <p:outputLabel for="mdp2" value="Vérification mot de passe" styleClass="col-md-5 control-label"/>
+                                <div class="col-md-7">
+                                    <p:password label="mdp" id="mdp2" required="true" styleClass="form-control" value="#{utilisateurBean.utilisateur.mdp}" feedback="true"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <p:fileUpload fileUploadListener="#{utilisateurBean.upload}" mode="advanced" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" update="avatarUtilisateurinput"/>
+                                <p:inputText type="hidden" value="#{utilisateurBean.utilisateur.avatar}" id="avatarUtilisateurinput"/>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-10">
+                                    <h:commandButton value="Ajouter" action="#{utilisateurBean.updateUtilisateur()}" styleClass="btn btn-success"/>
+                                </div>
+                            </div>
+                        </h:form> 
+                    </h:panelGrid>  
+                </p:tab>  
+            </p:tabView>
+        </section>
+        <script src="resources/js/main.js"></script>
+    </h:body>
+</html>
+
