@@ -15,8 +15,8 @@ The Data transmitted via the ANT + technology are used simultaneously to adjust 
 ## Technologies used ##
 
 *Java EE
--GlassFish server
--PrimeFaces library
--HTML5/CSS3
--jQuery
--ANT+*
+- GlassFish server
+- PrimeFaces library
+- HTML5/CSS3
+- jQuery
+- ANT+*
