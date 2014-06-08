@@ -19,4 +19,4 @@ The Data transmitted via the ANT + technology are used simultaneously to adjust 
 - PrimeFaces library
 - HTML5/CSS3
 - jQuery
-- ANT+*
+- ANT+
